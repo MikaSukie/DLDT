@@ -2,90 +2,66 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title></title>
-
 <style>
-    * {
-        box-sizing: border-box;
-    }
-
-    html, body {
-        margin: 0;
-        min-height: 100%;
-        background: #fff;
-        font-family: system-ui, sans-serif;
-    }
-
-    .container {
-        padding: 20px;
-        max-width: 700px;
-        margin: 0 auto;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-    }
-
-    input {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        margin-bottom: 12px;
-    }
-
-    button {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        cursor: pointer;
-        border: 1px solid #aaa;
-        border-radius: 6px;
-        background: #f5f5f5;
-    }
-
-    button:active {
-        background: #ddd;
-    }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: system-ui, sans-serif;
+  background: white;
+}
+input, button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  font: inherit;
+}
+video {
+  display: block;
+  width: 100%;
+  max-height: 75vh;
+  margin: 8px 0 12px;
+  background: #000;
+}
 </style>
 </head>
-
 <body>
 
-<div class="container">
-    <label for="videoUrl">Link:</label>
+<input id="url" type="url" placeholder="Link:" autocomplete="url">
 
-    <input
-        id="videoUrl"
-        type="url"
-        placeholder="https://example.com/video.mp4"
-        autocomplete="off"
-        autocapitalize="none"
-        spellcheck="false"
-    >
+<button onclick="loadVideo()">Open video</button>
 
-    <button onclick="downloadVideo()">
-        Trigger download
-    </button>
-</div>
+<video id="video" controls playsinline hidden></video>
+
+<button onclick="downloadVideo()">Download video</button>
 
 <script>
+const input = document.getElementById('url');
+const video = document.getElementById('video');
+
+function loadVideo() {
+  const url = input.value.trim();
+  if (!/^https?:\/\//i.test(url)) return;
+
+  video.src = url;
+  video.hidden = false;
+  video.load();
+}
+
 function downloadVideo() {
-    const url = document.getElementById("videoUrl").value.trim();
+  const url = input.value.trim();
+  if (!/^https?:\/\//i.test(url)) return;
 
-    if (!url) return;
-
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = "";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '';
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 </script>
 
